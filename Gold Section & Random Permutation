@@ -1,0 +1,110 @@
+#%%
+#黄金分割法求函数exp(x) + (x-2)^2极值点
+
+def f(x):
+    import numpy as np
+    return np.exp(x) + (x-2)**2 #定义函数f(x) = exp(x) + (x-2)**2
+    
+def find_extremum(a0,b0,e): #定义黄金分割求极值点函数
+    import numpy as np
+    import matplotlib.pyplot as plt
+    X = np.linspace(-5,5,300)
+    Y = np.exp(X) + (X-2)**2
+    plt.plot(X, Y)
+    plt.show() #画出函数f(x)的图像
+    a = a0 #初始区间左端点
+    b = b0 #初始区间右端点
+    n = 0 #初始循环次数
+    rate = 0.618034 #黄金分割率
+    length = (b0 - a0)*(rate**n) #初始区间长度
+    x1 = b - rate*length #第一次分割较小值
+    x2 = a + rate*length #第一次分割较大值
+    f_x1 = f(x1)
+    f_x2 = f(x2)
+    print(x1, x2)
+    print(f_x1,f_x2)
+    
+    while length > e: 
+        n = n + 1 #循环次数
+        length = (b0 - a0)*(rate**n) #第n次循环区间长度
+        if f_x1 <= f_x2:
+            a = a #区间左端点保持不变
+            b = x2 #区间右端点取前一次的分割较大值
+            x2 = x1 #分割较大点取前一次的分割较小值
+            x1 = b - rate*length #分割较小点根据区间右端点和区间长度进行计算
+            f_x1 = f(x1)
+            f_x2 = f(x2)
+            print(a, b)
+            print(f_x1, f_x2)
+        else:
+            b = b
+            a = x1
+            x1 = x2
+            x2 = a + rate*length
+            f_x1 = f(x1)
+            f_x2 = f(x2)
+            print(a, b)
+            print(f_x1, f_x2)
+    else:
+        x_min = (a + b)/2
+        fx_min = f(x_min)
+        print(x_min, fx_min, e)
+
+find_extremum(0, 2, 0.001)
+    
+        
+#%% 随机排列算法
+# =============================================================================
+# 伪代码：
+# Begin（算法开始）
+# 生成列表list = [x1, x2, x3, ..., xn] （xn可取任意整数值，n可取任意自然数）
+# 根据list生成对应的下标indices = [1, 2, 3, ..., n]
+# 利用函数random.choice()在indices中取值生成随机下标i
+# while indices中的元素个数>=2:
+#     a = xn
+#     xn = xk
+#     xi = a （调换顺序）
+#     indices.pop (删去indicators中最后一个元素)
+#     print(list)
+# else:
+#     break（结束循环）
+# End（算法结束）
+# =============================================================================
+def random_permutation(a):
+    import os
+    if a == 1:
+        list = []
+        k = 0
+        while len(list) < 10: #生成初始列表
+            k += 1
+            number = int(input("请任意输入十个自然数：\n" + "这是第" + str(k) + "个："))
+            if number == "exit":
+                os._exit()
+            else:
+                list.append(number)
+        else:
+            print("The original list is:")
+            print(list)
+            print("\n")
+            import random
+            indices = []
+            for indice in range(0, len(list), 1): #生成下标列表
+                indices.append(int(indice))
+            while len(indices) >= 2:
+                i = random.choice(indices) #生成随机下标
+                last_indice = indices[-1]
+                last_number = list[last_indice]
+                #调换数字顺序
+                random_number = list[i]
+                a = int(last_number)
+                list[last_indice] = random_number
+                list[i] = a 
+#                print(i, last_indice, last_number, random_number, list)
+                indices.pop()
+            else:
+                print("The permutated list is :")
+                print(list)
+    elif a == 0:
+        os._exit()
+
+random_permutation(1)
