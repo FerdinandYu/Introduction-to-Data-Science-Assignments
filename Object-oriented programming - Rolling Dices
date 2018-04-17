@@ -1,0 +1,65 @@
+#%% 三枚骰子的实现与点数和的分布律
+
+# ====One Dice=============================================================
+# pmf_dice = {}
+# for j in [1,2,3,4,5,6]:
+#     pmf_dice[j] = 1.0/6
+# print(pmf_dice)
+# =============================================================================
+
+#%% 
+class Pmf(object):
+    
+    def __init__(self):
+        self.d = {}
+    
+    def set(self,x_k,p_k=0):
+        """每调用一次增加一对可能取值和取值概率"""
+        self.d[x_k] = p_k
+        
+    def get_prob(self,value):
+        return self.d[value]
+    
+    def total(self):
+        sum_freq = sum(self.d.values())
+        return sum_freq
+    
+    def normalize(self):
+        total = self.total()
+        for x in self.d:
+            self.d[x] = self.d[x]/total
+            
+
+class equ_prob(Pmf):
+    
+    def __init__(self,results):
+        Pmf.__init__(self)
+        for result in results:
+            self.set(result,1)
+        self.normalize()
+
+#%% Two Dices
+         
+a = range(6)
+tx = [(i+1,j+1) for i in a for j in a]
+pmf_2_dice = equ_prob(tx)
+prob_11 = pmf_2_dice.get_prob((1,1))
+print(prob_11)
+
+xks = list(pmf_2_dice.d.keys())
+count_sum1 = sum(pmf_2_dice.get_prob(xk) for xk in xks if sum(xk)==4)
+prob_sum_2dice = [sum(pmf_2_dice.get_prob(xk) for xk in xks if sum(xk)==s+1) for s in range(12)]
+print(prob_sum_2dice)
+
+#%% Three Dices
+b = range(6)
+complete_set = [(i+1,j+1,k+1) for i in b for j in b for k in b]
+print(complete_set)
+pmf_3_dice = equ_prob(complete_set)
+prob_111 = pmf_3_dice.get_prob((1,1,1))
+print(prob_111)
+
+mks = list(pmf_3_dice.d.keys())
+count_sum1 = sum(pmf_3_dice.get_prob(mk) for mk in mks if sum(mk)==4)
+prob_sum_3dice = [sum(pmf_3_dice.get_prob(mk) for mk in mks if sum(mk)==s+1) for s in range(18)]
+print(prob_sum_3dice)
