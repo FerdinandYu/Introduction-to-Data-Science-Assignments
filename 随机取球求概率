@@ -1,0 +1,26 @@
+##有两个外表不能分辨的不透明盒子（盒子底部有编号A和B），已知A盒中有8个红球2个黑球，B盒中有8个
+##黑球2个红球。游戏规则如下：主持人抛一个均匀的硬币，若正面朝上则拿出A盒，若反面朝上则拿出B盒。
+##游戏者可以从盒中随机抽出一个球，然后根据球的颜色推测拿到的是哪个盒子。现在先计算抽中红球的概率。
+
+import PmfClass
+from PmfClass import *
+
+d_A = ['RED','RED','RED','RED','RED','RED','RED','RED','BLACK','BLACK']
+d_B = ['RED','RED','BLACK','BLACK','BLACK','BLACK','BLACK','BLACK','BLACK','BLACK']
+
+pmf_A = Pmf()
+for color1 in d_A:
+	p_color1 = d_A.count(color1)/len(d_A)
+	pmf_A.set(color1,p_color1)
+
+pmf_B = Pmf()
+for color2 in d_B:
+	p_color2 = d_B.count(color2)/len(d_B)
+	pmf_B.set(color2,p_color2)
+    
+mix = {'Box A':{'RED':pmf_A.get_prob('RED'),'BLACK':pmf_A.get_prob('BLACK')},
+                'Box B':{'RED':pmf_B.get_prob('RED'),'BLACK':pmf_B.get_prob('BLACK')}}
+pmf_mix = Pmf()
+pmf_mix.set_dict(mix)
+lm = pmf_mix.get_dict()
+print(lm['Box B']['BLACK'])
